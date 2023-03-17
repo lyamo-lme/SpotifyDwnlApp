@@ -1,9 +1,8 @@
-using MPD.Auth.IdentityServer;
 using MPD.Core;
 
-namespace MPD.Auth;
+namespace MPD.Auth.IdentityServer;
 
-public static class ISDIExtension
+public static class IdentityServerExtensions
 {
     public static IServiceCollection AddIdentityServerService(this IServiceCollection builder)
     {

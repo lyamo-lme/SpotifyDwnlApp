@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MPD.Auth.Data;
+using MPD.Auth.Core;
+using MPD.Auth.IdentityServer.ExternalProviders;
+using MPD.Auth.Models.Config;
+using MPD.Core;
+using MPD.Data.AppDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,17 +12,20 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddBase();
 
-builder.Services.AddControllersWithViews();
+builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("Secrets.json", optional: true);
 
-builder.Services.AddAuthentication();
+builder.Services.AddSpotifyAuth(
+    builder.Configuration.GetSection("spotify").Get<ServiceSetting>()
+    ?? throw new InvalidOperationException());
 
 var app = builder.Build();
 
