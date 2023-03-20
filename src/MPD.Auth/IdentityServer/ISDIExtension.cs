@@ -1,4 +1,5 @@
 using MPD.Core;
+using MPD.Core.Entities;
 
 namespace MPD.Auth.IdentityServer;
 

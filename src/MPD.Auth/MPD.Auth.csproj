@@ -25,6 +25,7 @@
     <ItemGroup>
       <ProjectReference Include="..\MPD.Core\MPD.Core.csproj" />
       <ProjectReference Include="..\MPD.Data\MPD.Data.csproj" />
+      <ProjectReference Include="..\MPD.Services\MPD.Services.csproj" />
     </ItemGroup>
 
 </Project>
