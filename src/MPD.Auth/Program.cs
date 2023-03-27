@@ -14,10 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MsSqlConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services
+    .AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+builder.Services
+    .AddIdentity<User, IdentityRole<int>>(options =>
     {
         options.User.AllowedUserNameCharacters = string.Empty;
         options.SignIn.RequireConfirmedEmail = false;
@@ -27,14 +29,17 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 
 builder.Services.AddBase();
 
-builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("Secrets.json", optional: true);
 
 builder.Services.AddIdentityServerService();
 
 
 builder.Services.AddSpotifyAuth(
-    builder.Configuration.GetSection("spotify").Get<ServiceSetting>()
+    builder.Configuration
+        .GetSection("spotify")
+        .Get<ServiceSetting>()
     ?? throw new InvalidOperationException());
 
 var app = builder.Build();

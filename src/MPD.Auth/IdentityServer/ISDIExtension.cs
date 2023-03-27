@@ -15,6 +15,7 @@ public static class IdentityServerExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddAspNetIdentity<User>()
             .AddDeveloperSigningCredential();
+        
         return builder;
     }
 }

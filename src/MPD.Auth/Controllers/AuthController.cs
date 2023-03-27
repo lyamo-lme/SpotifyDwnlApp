@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MPD.Auth.Models.ViewModels;
+using MPD.Core.Data;
 using MPD.Core.Entities;
 using MPD.Core.ExternalProviderServices;
 
@@ -32,7 +33,7 @@ public class AuthController : Controller
 
             var redirect = Url.Action(nameof(ExternalLoginCallback), "Auth", new
             {
-                returnUrl = "https://localhost:7187"
+                returnUrl = returnUrl
             });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirect);
 
@@ -54,7 +55,6 @@ public class AuthController : Controller
                 return RedirectToAction($"Login?returnUrl={returnUrl}");
             }
 
-
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
             if (result.Succeeded)
             {
@@ -74,6 +74,7 @@ public class AuthController : Controller
         }
     }
 
+    [HttpGet]
     public async Task<IActionResult> Login(string returnUrl = "/")
     {
         var externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();

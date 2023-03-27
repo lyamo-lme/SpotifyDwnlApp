@@ -4,7 +4,7 @@ namespace MPD.Core.Data;
 
 public interface IRepository<TEntity> where TEntity:class
 {
-    public Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null,
+    public Task<IQueryable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,int? take=null, int? skip=null,
         string includeProperties = "");
     public Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> func, string? include=null);

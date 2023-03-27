@@ -9,8 +9,8 @@ public class AppDbContext:IdentityDbContext<User, IdentityRole<int>, int>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
     {
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
+        // Database.EnsureDeleted();
+        // Database.EnsureCreated();
     }
     public DbSet<User> Users { get; set; }
     public DbSet<SpotifyProfile> SpotifyProfiles { get; set; }
