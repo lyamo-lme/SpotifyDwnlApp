@@ -1,3 +1,4 @@
+using Duende.IdentityServer.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MPD.Auth.Core;
@@ -16,7 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("MsSqlConnectio
 
 builder.Services
     .AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+        options.UseSqlServer(connectionString));
 
 builder.Services
     .AddIdentity<User, IdentityRole<int>>(options =>
@@ -35,6 +36,15 @@ builder.Configuration
 
 builder.Services.AddIdentityServerService();
 
+builder.Services.AddCors((options) =>
+{
+    options.AddPolicy(options.DefaultPolicyName,
+        policyBuilder =>
+            policyBuilder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+});
 
 builder.Services.AddSpotifyAuth(
     builder.Configuration
@@ -59,6 +69,7 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseCors("__DefaultCorsPolicy");
 app.UseRouting();
 
 

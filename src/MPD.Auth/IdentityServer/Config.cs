@@ -64,13 +64,13 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Implicit,
                 RedirectUris = new List<string>()
                 {
-                    "https://localhost:3000/signin",
-                    "https://localhost:3000"
+                    "http://localhost:3000/callback",
+                    "http://localhost:3000"
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
-                    "https://localhost:3000/signin",
-                    "https://localhost:3000"
+                    "http://localhost:3000/callback",
+                    "http://localhost:3000"
                 },
                 ClientSecrets =
                 {

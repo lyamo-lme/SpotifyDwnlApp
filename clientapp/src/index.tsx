@@ -5,26 +5,33 @@ import {store} from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Callback} from "./components/auth/Callback";
+import {BrowserRouter} from "react-router-dom";
+import userManager from "./app/services/utils/userManager";
+import {OidcProvider} from 'redux-oidc';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
+const oidcProvider = {
+    userManager,
+    store
+}
+
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path={"/"} Component={App}/>
-                    <Route path={"/signin"} Component={Callback}/>
-                </Routes>
-            </BrowserRouter>
+            <OidcProvider  {...oidcProvider}>
+                <BrowserRouter>
+                    <App/>
+                </BrowserRouter>
+            </OidcProvider>
         </Provider>
     </React.StrictMode>
 );
 
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals(console.log);
+
