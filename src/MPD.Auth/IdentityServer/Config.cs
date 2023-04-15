@@ -61,7 +61,7 @@ public static class Config
             {
                 ClientId = "spa.client",
                 ClientName = "spa lient",
-                AllowedGrantTypes = GrantTypes.Implicit,
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
                 RedirectUris = new List<string>()
                 {
                     "http://localhost:3000/callback",
@@ -86,31 +86,6 @@ public static class Config
                 AllowOfflineAccess = true,
                 AlwaysIncludeUserClaimsInIdToken = true,
                 AllowAccessTokensViaBrowser = true
-            },
-            new Client
-            {
-                ClientId = "mvc.client",
-                ClientName = "Client Credentials Client",
-                AllowedGrantTypes = GrantTypes.Code,
-                RedirectUris = new List<string>()
-                {
-                },
-                PostLogoutRedirectUris = new List<string>()
-                {
-                },
-                AllowedCorsOrigins = new List<string>()
-                {
-                },
-                ClientSecrets = { new Secret("ClientSecret_MVC".Sha256()) },
-                AllowedScopes =
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    "api"
-                },
-                AccessTokenLifetime = 60 * 2,
-                AllowOfflineAccess = true,
-                AlwaysIncludeUserClaimsInIdToken = true
             }
         };
 }

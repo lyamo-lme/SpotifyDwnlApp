@@ -4,12 +4,22 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>486e895d-7abd-4593-b0ff-7940c0b4533a</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MediaToolkit" Version="1.1.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
+        <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="VideoLibrary" Version="3.2.3" />
+        <PackageReference Include="YoutubeExplode" Version="6.2.12" />
+        <PackageReference Include="YoutubeExplode.Converter" Version="6.2.12" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MPD.Auth\MPD.Auth.csproj" />
     </ItemGroup>
 
 </Project>

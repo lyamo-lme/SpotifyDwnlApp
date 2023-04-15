@@ -17,7 +17,7 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
     }
 
 
-    public async Task<IQueryable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null,
+    public async ValueTask<IQueryable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, int? take = null, int? skip = null,
         string includeProperties = "")
     {

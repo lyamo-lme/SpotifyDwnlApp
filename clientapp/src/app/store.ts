@@ -1,10 +1,12 @@
 import {configureStore, ThunkAction, Action, createSlice, PayloadAction, applyMiddleware} from '@reduxjs/toolkit';
 import { loadUser, reducer as oidcReducer } from 'redux-oidc';
 import userManager from './services/utils/userManager';
+import {searchReducer} from "./slices/SearchSlice";
 
 export const store = configureStore({
     reducer: {
-        oidc: oidcReducer
+        oidc: oidcReducer,
+        search: searchReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
 });

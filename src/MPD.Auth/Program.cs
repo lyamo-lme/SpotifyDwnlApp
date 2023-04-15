@@ -74,7 +74,6 @@ app.UseRouting();
 
 
 app.UseIdentityServer();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
