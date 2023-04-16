@@ -1,5 +1,7 @@
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Web;
 using MediaToolkit;
 using MediaToolkit.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -9,6 +11,7 @@ using YoutubeExplode.Videos.Streams;
 using YoutubeExplode.Converter;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using MPD.Core.DownloadProvider;
+using MPD.WebApi.Models;
 using NReco.VideoConverter;
 using VideoLibrary;
 
@@ -35,11 +38,17 @@ public class DownloadController : Controller
 
     [HttpPost]
     [Route("")]
-    public async Task<IActionResult> DownloadAudio(string[] url)
+    public async Task<IActionResult> DownloadAudio(UrlDto[] urls)
     {
-        var files = await _musicDownloader.DownloadAudiosAsync(url);
-        var mp3S = await _musicDownloader.Convert(files, Format.ogg);
-        var ar =  await _musicDownloader.ToZipAsync(mp3S, Format.ogg);
+        foreach (var url in urls)
+        {
+            NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(url.Id).Query);
+            url.Id = parameters["v"];
+        }
+
+        var files = await _musicDownloader.DownloadAudiosAsync(urls);
+        // var mp3S = await _musicDownloader.Convert(files, Format.ogg);
+        var ar = await _musicDownloader.ToZipAsync(files, Format.webm);
 
         return File(ar, "application/zip", "zip");
     }

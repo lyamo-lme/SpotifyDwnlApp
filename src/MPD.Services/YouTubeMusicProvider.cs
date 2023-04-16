@@ -1,5 +1,7 @@
 using System.IO.Compression;
+using MPD.Core;
 using MPD.Core.DownloadProvider;
+using MPD.WebApi.Models;
 using NAudio.Wave;
 using NReco.VideoConverter;
 using YoutubeExplode;
@@ -19,6 +21,7 @@ public class YouTubeMusicProvider : IMusicDownloader
     public async Task<byte[]> DownloadAudioAsync(string videoId)
     {
         var streamManifest = await _youtube.Videos.Streams.GetManifestAsync(videoId);
+
         var audioStreamInfo = streamManifest
             .GetAudioStreams()
             .Where(s => s.Container == Container.WebM)
@@ -30,12 +33,12 @@ public class YouTubeMusicProvider : IMusicDownloader
         return ms.ToArray();
     }
 
-    public async Task<IEnumerable<byte[]>> DownloadAudiosAsync(string[] videoIds)
+    public async Task<List<DataFile>> DownloadAudiosAsync(UrlDto[] videoIds)
     {
-        var file = new List<byte[]>(videoIds.Length);
+        var file = new List<DataFile>(videoIds.Length);
         foreach (var videoId in videoIds)
         {
-            var streamManifest = await _youtube.Videos.Streams.GetManifestAsync(videoId);
+            var streamManifest = await _youtube.Videos.Streams.GetManifestAsync(videoId.Id);
             var audioStreamInfo = streamManifest
                 .GetAudioStreams()
                 .Where(s => s.Container == Container.WebM)
@@ -44,14 +47,18 @@ public class YouTubeMusicProvider : IMusicDownloader
             var audio = await _youtube.Videos.Streams.GetAsync(audioStreamInfo);
             MemoryStream ms = new MemoryStream();
             await audio.CopyToAsync(ms);
-            file.Add(ms.ToArray());
+            file.Add(new DataFile
+            {
+                data = ms.ToArray(),
+                Name = videoId.Name
+            });
             await ms.DisposeAsync();
         }
 
         return file;
     }
 
-    public async Task<byte[]> ToZipAsync(IEnumerable<byte[]> data, string typesFile)
+    public async Task<byte[]> ToZipAsync(List<DataFile> data, string typesFile)
     {
         using (var ms = new MemoryStream())
         {
@@ -59,9 +66,9 @@ public class YouTubeMusicProvider : IMusicDownloader
             {
                 foreach (var attachment in data)
                 {
-                    var entry = zipArchive.CreateEntry($"some.{typesFile}", CompressionLevel.Fastest);
+                    var entry = zipArchive.CreateEntry($"{attachment.Name}.{typesFile}", CompressionLevel.Fastest);
                     await using var entryStream = entry.Open();
-                    await using Stream stream = new MemoryStream(attachment);
+                    await using Stream stream = new MemoryStream(attachment.data);
                     await stream.CopyToAsync(entryStream);
                 }
             }
@@ -70,12 +77,12 @@ public class YouTubeMusicProvider : IMusicDownloader
         }
     }
 
-    public async ValueTask<IEnumerable<byte[]>> Convert(IEnumerable<byte[]> data, string outputFormat)
+    public async ValueTask<List<DataFile>> Convert(List<DataFile> data, string outputFormat)
     {
-        var mp3s = new List<byte[]>(data.Count());
+        var output = new List<DataFile>(data.Count());
         foreach (var webmBytes in data)
         {
-            using (var webmStream = new MemoryStream(webmBytes))
+            using (var webmStream = new MemoryStream(webmBytes.data))
             {
                 using (var mp3Stream = new MemoryStream())
                 {
@@ -84,11 +91,13 @@ public class YouTubeMusicProvider : IMusicDownloader
                         new ConvertSettings());
                     convertTask.Start();
                     convertTask.Wait();
-                    mp3s.Add(mp3Stream.ToArray());
+                    output.Add(new DataFile(){
+                        data = mp3Stream.ToArray(),
+                        Name = webmBytes.Name
+                    });
                 }
             }
         }
-
-        return mp3s;
+        return output;
     }
 }

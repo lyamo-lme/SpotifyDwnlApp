@@ -1,10 +1,12 @@
 
+using MPD.WebApi.Models;
+
 namespace MPD.Core.DownloadProvider;
 
 public interface IMusicDownloader
 {
     Task<byte[]> DownloadAudioAsync(string videoId);
-    Task<IEnumerable<byte[]>> DownloadAudiosAsync(string[] videoIds);
-    Task<byte[]> ToZipAsync(IEnumerable<byte[]> data, string typesFile);
-    ValueTask<IEnumerable<byte[]>> Convert(IEnumerable<byte[]> data, string outputFormat);
+    Task<List<DataFile>> DownloadAudiosAsync(UrlDto[] dtos);
+    Task<byte[]> ToZipAsync(List<DataFile> data, string typesFile);
+    ValueTask<List<DataFile>> Convert(List<DataFile> data, string outputFormat);
 }

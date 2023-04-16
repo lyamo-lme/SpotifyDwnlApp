@@ -8,18 +8,25 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Google.Apis.YouTube.v3" Version="1.60.0.2945" />
         <PackageReference Include="MediaToolkit" Version="1.1.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
         <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
         <PackageReference Include="VideoLibrary" Version="3.2.3" />
+        <PackageReference Include="YouTubeApiRestClient" Version="1.0.2" />
         <PackageReference Include="YoutubeExplode" Version="6.2.12" />
         <PackageReference Include="YoutubeExplode.Converter" Version="6.2.12" />
+        <PackageReference Include="YouTubeSearch" Version="2.2.6" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MPD.Auth\MPD.Auth.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\" />
     </ItemGroup>
 
 </Project>
