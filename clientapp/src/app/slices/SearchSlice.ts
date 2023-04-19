@@ -20,6 +20,9 @@ export const searchSlice = createSlice({
         },
         fetchResult: (state:SearchState, action: PayloadAction<string>)=>{
             return state;
+        },
+        isLoadingChange: (state: SearchState, action: PayloadAction<boolean>)=>{
+            return {...state, isLoading: action.payload}
         }
     }
 });

@@ -41,7 +41,7 @@ public class SpotifyController : Controller
                 foreach (var artist in trackItem.Artists)
                 {
                     queryBuilder.Append(artist.Name);
-                    queryBuilder.Append(" ");
+                    queryBuilder.Append(" "); 
                 }
 
                 queryBuilder.Append(trackItem.Name);
@@ -58,16 +58,10 @@ public class SpotifyController : Controller
 
         return Ok(urls);
     }
+
+    public async Task<IActionResult> SearchResult(string query)
+    {
+        var searchResult = await _spotifyClient.Search.Item(new SearchRequest(SearchRequest.Types.All, query));
+        return Ok(searchResult);
+    }
 }
-
-
-// var youtubeService = new YouTubeService(new BaseClientService.Initializer()
-// {
-//     ApiKey = "AIzaSyDZynyKnQnnaUwxRCpEzWpj6h17o24sdCs",
-//     ApplicationName = "spotify",
-// });
-// var searchListRequest = youtubeService.Search.List("snippet");
-// searchListRequest.MaxResults = 5;
-// searchListRequest.Q = stringBuilder.ToString();
-// var searchListResponse = await searchListRequest.ExecuteAsync();
-// urls.Add(searchListResponse.Items[0].Id.VideoId);

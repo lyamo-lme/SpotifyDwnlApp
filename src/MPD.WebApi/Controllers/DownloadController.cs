@@ -10,6 +10,7 @@ using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using YoutubeExplode.Converter;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using MPD.Core;
 using MPD.Core.DownloadProvider;
 using MPD.WebApi.Models;
 using NReco.VideoConverter;
@@ -30,10 +31,10 @@ public class DownloadController : Controller
 
     [HttpGet]
     [Route("{url}")]
-    public async Task<IActionResult> DownloadAudio(string url)
+    public async Task<IActionResult> DownloadAudio(UrlDto dto)
     {
-        byte[] mp3Bytes = await _musicDownloader.DownloadAudioAsync(url);
-        return File(mp3Bytes, "audio/webm", "mm.webm");
+        DataFile musicFile = await _musicDownloader.DownloadAudioAsync(dto);
+        return File(musicFile.dataBytes, $"audio/{musicFile.TypeFile}", $"{musicFile.Name}");
     }
 
     [HttpPost]
@@ -47,8 +48,7 @@ public class DownloadController : Controller
         }
 
         var files = await _musicDownloader.DownloadAudiosAsync(urls);
-        // var mp3S = await _musicDownloader.Convert(files, Format.ogg);
-        var ar = await _musicDownloader.ToZipAsync(files, Format.webm);
+        var ar = await _musicDownloader.ToZipAsync(files);
 
         return File(ar, "application/zip", "zip");
     }
